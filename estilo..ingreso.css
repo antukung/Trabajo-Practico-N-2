@@ -1,0 +1,46 @@
+#contenedor {
+    display: grid;
+    place-content: center;
+    background-color: rgb(103, 151, 194);
+    
+}
+
+#login {
+    color: brown;
+}
+
+#contenedor-registro {
+    display: grid;
+    place-content: center;
+    background-color: rgb(20, 238, 154);
+    
+}
+
+.mensaje {
+    display: grid;
+    place-content: center;
+    color: blue;
+}
+
+#body-centers {
+    display: grid;
+    place-content: center;
+}
+
+input {
+    width: 8em;
+    height: 1em;
+}
+
+#pie {
+    background-color: aquamarine;
+    height: 3em;
+    font-family: 'Times New Roman', Times, serif;
+    display: grid;
+    place-content: center;
+}
+
+img {
+    width: 4em;
+    height: 4em;
+}
