@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ingreso</title>
     <link rel="stylesheet" href="estilo..ingreso.css">
 </head>
+
 <body>
     <div id="contenedor">
         <h5>Ingresa con tus datos</h5>
@@ -13,13 +15,14 @@
         <input type="text" id="usuario">
         <label for="constrasenia">contraseña</label>
         <input type="text" id="constrasenia">
-        <a href="memoria.html">
-        <button >Ingresar</button>
-        </a>
+        <button onclick="ingresar()">Ingresar</button>
+
         <a href="registrarse.html">
-        <button id="login">Registrarse</button>
+            <button id="login">Registrarse</button>
         </a>
     </div>
-    <script src="algoritmos.pagina.js"></script>
+    <p id="mensaje"></p>
+    <script src="json.js"></script>
 </body>
+
 </html>
