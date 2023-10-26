@@ -2,7 +2,7 @@ let elTiempo = document.querySelector("#tiempo");
 let seleccionActual = [];
 let celdasAbiertas = [];
 let tablero = [];
-let celdasOcultas = 0
+let celdasOcultas = 0;
 
 // Función para inicializar el tablero del juego de memoria
 function iniciarMemoria() {
@@ -63,38 +63,23 @@ function ocultarCeldas(tablero) {
     const n = tablero.length;
     const m = tablero[0].length;
     const matrizCubierta = new Array(n);
+  
     for (let i = 0; i < n; i++) {
         matrizCubierta[i] = new Array(m).fill(0); // Inicializa la matriz cubierta
     }
 
     // Decide aleatoriamente cuántas celdas ocultar y cuáles ocultar
     const numCeldasOcultas = Math.floor(Math.random() * (n * m)); // Número de celdas a ocultar
-    
 
-    while (celdasOcultas < numCeldasOcultas) {
-        const fila = Math.floor(Math.random() * n);
-        const columna = Math.floor(Math.random() * m);
-
-        if (matrizCubierta[fila][columna] === 0) {
-            matrizCubierta[fila][columna] = 1; // Marca la celda como oculta
-            celdasOcultas++;
-        }
-    }
-
-    if (celdasOcultas === 0) {
-        alert("GANASTE");
-    }
-    else {
-        // Llama a la función para mostrar el juego de memoria pasando la matriz cubierta
-        mostrarMemoria(tablero, matrizCubierta);
-    }
+    celdasOcultas=n*m;
 }
-
 
 // Función para mostrar el juego de memoria en la página
 function mostrarMemoria(tablero, matrizCubierta) {
     const tableroDiv = document.getElementById("tablero");
     tableroDiv.innerHTML = "";
+
+    let celdasDescubiertas = 0; // Variable para contar las celdas descubiertas
 
     for (let i = 0; i < tablero.length; i++) {
         for (let j = 0; j < tablero[i].length; j++) {
@@ -111,6 +96,8 @@ function mostrarMemoria(tablero, matrizCubierta) {
                         if (celda1.src === celda2.src) {
                             celdasAbiertas.push(celda1, celda2);
                             seleccionActual = [];
+                            celdasOcultas -= 2; // Decrementa el contador de celdas ocultas
+                            verificarGanador(); // Verificar si todas las celdas se han descubierto
                         } else {
                             setTimeout(() => {
                                 celda1.src = "cubierta.png";
@@ -121,7 +108,7 @@ function mostrarMemoria(tablero, matrizCubierta) {
                     }
                 }
             });
-
+            
             tableroDiv.appendChild(celda);
         }
         tableroDiv.appendChild(document.createElement("br"));
@@ -151,4 +138,10 @@ function iniciarCronometro() {
 
     startTime = new Date();
     updateClock();
+}
+
+function verificarGanador() {
+    if (celdasOcultas === 0) {
+        alert("GANASTE"); // Muestra el mensaje si todas las celdas se han descubierto
+    }
 }
