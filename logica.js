@@ -134,6 +134,7 @@ function iniciarCronometro() {
 
         elTiempo.innerHTML = `Tiempo: ${minutos}:${segundos.toString().padStart(2, "0")}`;
         requestAnimationFrame(updateClock);
+        verificarGanador(minutos,segundos);
     }
 
     startTime = new Date();
@@ -142,6 +143,12 @@ function iniciarCronometro() {
 
 function verificarGanador() {
     if (celdasOcultas === 0) {
-        alert("GANASTE"); // Muestra el mensaje si todas las celdas se han descubierto
+        elTiempo.innerHTML="GANASTE"; // Muestra el mensaje si todas las celdas se han descubierto
+        tiempoganador(minutos,segundos)
     }
+}
+
+
+function tiempoganador(minutos, segundos) {
+    localStorage.setItem("elTiempoDeJuego", `${minutos}:${segundos.toString().padStart(2, "0")}`);
 }
