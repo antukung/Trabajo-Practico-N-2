@@ -3,12 +3,13 @@ let seleccionActual = [];
 let celdasAbiertas = [];
 let tablero = [];
 let celdasOcultas = 0;
+const URL_API_POKEMON = 'https://pokeapi.co/api/v2/pokemon/id'
 
 // Función para inicializar el tablero del juego de memoria
 function iniciarMemoria() {
     const selector = parseInt(document.querySelector("#selector").value);
-    const matrixN = [2, 4, 6, 2, 3, 4, 5];
-    const matrixY = [2, 4, 6, 10, 10, 10, 10];
+    const matrixN = [2,4,6,8,2,3,4,5];
+    const matrixY = [2,4,6,8,10,10,10,10];
     const n = matrixN[selector];
     const m = matrixY[selector];
     tablero = new Array(n);
@@ -23,41 +24,67 @@ function iniciarMemoria() {
 }
 
 // Función para rellenar el tablero del juego de memoria con imágenes
-function rellenarMemoria(tablero) {
+async function rellenarMemoria(tablero) {
     const n = tablero.length;
     const m = tablero[0].length;
     const maxImagenes = (n * m) / 2;
 
-    const imagenes = [
-        "1.png", "2.png", "3.png", "4.png", "5.png",
-        "6.png", "7.png", "8.png", "9.png", "10.png",
-        "11.png", "12.png", "13.png", "14.png", "15.png",
-        "16.png", "17.png", "18.png", "19.png", "20.png",
-        "21.png", "22.png", "23.png", "24.png", "25.png"
-    ];
+    // Obtener un conjunto de nombres de Pokémon aleatorios
+    const pokemonNombres = await obtenerNombresPokemon(maxImagenes);
 
-    // Crea un arreglo para almacenar las imágenes duplicadas
-    const imagenesDuplicadas = [];
+    // Duplicar los nombres de Pokémon para llenar el tablero
+    const pokemonDuplicados = [];
     for (let i = 0; i < maxImagenes; i++) {
-        imagenesDuplicadas.push(imagenes[i]);
-        imagenesDuplicadas.push(imagenes[i]);
+        pokemonDuplicados.push(pokemonNombres[i]);
+        pokemonDuplicados.push(pokemonNombres[i]);
     }
 
-    // Mezcla el arreglo de imágenes duplicadas
-    for (let i = imagenesDuplicadas.length - 1; i > 0; i--) {
+    // Mezcla el arreglo de nombres de Pokémon duplicados
+    for (let i = pokemonDuplicados.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [imagenesDuplicadas[i], imagenesDuplicadas[j]] = [imagenesDuplicadas[j], imagenesDuplicadas[i]];
+        [pokemonDuplicados[i], pokemonDuplicados[j]] = [pokemonDuplicados[j], pokemonDuplicados[i]];
     }
 
     let index = 0;
     for (let i = 0; i < n; i++) {
         for (let j = 0; j < m; j++) {
-            tablero[i][j] = imagenesDuplicadas[index];
+            // Usa la función obtenerImagenPokemon para obtener la URL de la imagen del Pokémon
+            const nombrePokemon = pokemonDuplicados[index];
+            const imagenURL = await obtenerImagenPokemon(nombrePokemon);
+            tablero[i][j] = imagenURL;
             index++;
         }
     }
 }
 
+// Función para obtener nombres de Pokémon aleatorios
+async function obtenerNombresPokemon(cantidad) {
+    const nombres = [];
+
+    while (nombres.length < cantidad) {
+        const randomID = Math.floor(Math.random() * 898) + 1; // 898 es el número total de Pokémon en la API
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomID}/`);
+        if (response.ok) {
+            const data = await response.json();
+            const nombre = data.name;
+            if (!nombres.includes(nombre)) {
+                nombres.push(nombre);
+            }
+        }
+    }
+
+    return nombres;
+}
+
+// Función para obtener la URL de la imagen de un Pokémon
+async function obtenerImagenPokemon(nombrePokemon) {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${nombrePokemon}/`);
+    if (response.ok) {
+        const data = await response.json();
+        const imagenURL = data.sprites.front_default;
+        return imagenURL;
+    }
+}
 // Función para ocultar algunas celdas en el juego de memoria
 function ocultarCeldas(tablero) {
     const n = tablero.length;
@@ -150,5 +177,5 @@ function verificarGanador() {
 
 
 function tiempoganador(minutos, segundos) {
-    localStorage.setItem("elTiempoDeJuego", `${minutos}:${segundos.toString().padStart(2, "0")}`);
+    localStorage.setItem("TIEMPO",JSON.stringify( `${minutos}:${segundos}`));
 }
